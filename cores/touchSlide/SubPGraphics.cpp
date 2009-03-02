@@ -38,6 +38,11 @@
 //*	Jan 25,	2009	<MLS> Added QuickDraw MoveTo, LineTo, Move, Line
 //*	Jan 26,	2009	<MLS> Added QuickDraw EraseRect
 //*	Feb  2,	2009	<MLS> Added QuickDraw DrawCString
+//*	Feb 10,	2009	<MLS> Version 1.1.1 posted to github
+//*	Feb 11,	2009	<MLS> Bumping my version to 1.1.2
+//*	Feb 11,	2009	<MLS> PlotIcon now uses program memory
+//*	Feb 12,	2009	<MLS> 7-seg display table now uses program memory
+//*	Feb 25,	2009	<MLS> Fixed bug in lcd_rectangle
 //*******************************************************************************
 //*	<MLS> Programming style
 //*			Never use 1 letter variable names, use LONG names, 
@@ -58,11 +63,11 @@
 
 
 #include	<avr/io.h>
+#include	<avr/pgmspace.h>
 #include	<inttypes.h>
 #include	<math.h>
 #include	<stdlib.h>
 #include	"wiring.h"
-
 
 #ifndef _HARDWARE_DEF_H_
 	#include	"HardwareDef.h"
@@ -1440,6 +1445,15 @@ void	Line(short deltaX, short deltaY)
 	}
 }
 
+
+//*******************************************************************************
+void	SetRGBcolor(COLOR *theColor, unsigned char redValue,  unsigned char greenValue,  unsigned char blueValue)
+{
+	theColor->red	=	redValue;
+	theColor->green	=	greenValue;
+	theColor->blue	=	blueValue;
+}
+
 //*******************************************************************************
 void	RGBForeColor(COLOR *theColor)
 {
@@ -1569,6 +1583,8 @@ void	DrawCString(short xloc, short yloc, char *theCstr)
 //*		0xff (all 1s) means its transparent
 //*		b10xxxxxx means that number of the following char
 //*******************************************************************************
+//*	Feb 10,	2009	<MLS> PlotIcon now uses program memory
+//*******************************************************************************
 void	PlotIcon(short xLoc, short yLoc, unsigned char *iconDef)
 {
 short	xSize, ySize;
@@ -1582,15 +1598,15 @@ COLOR	myColor;
 
 
 	cc				=	0;
-	xSize			=	(iconDef[cc++] & 0x0ff);
-	ySize			=	(iconDef[cc++] & 0x0ff);
+	xSize			=	(pgm_read_byte_near(iconDef + cc++) & 0x0ff);
+	ySize			=	(pgm_read_byte_near(iconDef + cc++) & 0x0ff);
 	totalBytes		=	(xSize * ySize) + 2;
 	xx				=	0;
 	yy				=	0;
 	previousByte	=	0xff;
 	while ((cc < totalBytes) && (yy < ySize))
 	{
-		currentByte	=	(iconDef[cc++] & 0x00ff);
+		currentByte	=	(pgm_read_byte_near(iconDef + cc++) & 0x00ff);
 		if (currentByte == 0x00ff)		//*	0xff means BACKGROUND
 		{
 			//*	just skip the location
@@ -1601,7 +1617,7 @@ COLOR	myColor;
 			//*	we have a RLE encoding
 			rleCount		=	currentByte & 0x3f;
 			//*	get the next byte
-			currentByte		=	(iconDef[cc++] & 0x00ff);
+			currentByte		=	(pgm_read_byte_near(iconDef + cc++) & 0x00ff);
 			myColor.red		=	((currentByte & B00110000) << 2) + 0x3F;
 			myColor.green	=	((currentByte & B00001100) << 4) + 0x3F;
 			myColor.blue	=	((currentByte & B00000011) << 6) + 0x3F;
@@ -1675,7 +1691,7 @@ COLOR	myColor;
 #ifndef Binary_h
 	#include	"binary.h"
 #endif
-int		g7SegmentDisplay[]	=	{//	/76543210
+prog_uchar		g7SegmentDisplay[]	PROGMEM =	{//	/76543210
 									B01110111,			//*	0
 									B00010010,			//*	1
 									B01011101,			//*	2
@@ -1738,7 +1754,7 @@ RECT	digitRect;
 		endOffset	=	1;
 	}
 
-	myBinaryValue	=	g7SegmentDisplay[decimalDigit & 0x01f];
+	myBinaryValue	=	pgm_read_byte_near(g7SegmentDisplay + (decimalDigit & 0x01f));
 	
 	if (myBinaryValue & B01000000)
 	{
@@ -1875,7 +1891,7 @@ void	lcd_rectangle(int x1, int y1, int x2, int y2, COLOR outline_color, COLOR fi
 	bcolor		=	fill_color;
 	fcolor		=	outline_color;
 	gFillEnb	=	true;
-	drawrect(x1, y1, (x2 - x1), (y2, y1));
+	drawrect(x1, y1, (x2 - x1), (y2 - y1));
 }
 
 //*******************************************************************************

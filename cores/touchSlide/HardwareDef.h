@@ -72,7 +72,6 @@
 	#define		PROGMEM
 	#undef		prog_char
 	#define		prog_char char
-//	#undef		pgm_read_byte_near
 	#undef		pgm_read_byte_near
 	#define		pgm_read_byte_near(x)	(char)x
 	#undef		pgm_read_word

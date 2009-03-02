@@ -30,6 +30,8 @@
 //*	Jan 11,	2009	<MLS> started on support for lcd family of calls
 //*	Jan 18,	2009	Version 1.1.0 handed over to Matt, Mike and Chriss
 //*	Jan 18,	2009	<MLS> Added bezier curve functions
+//*	Feb 10,	2009	<MLS> Version 1.1.1 posted to github
+//*	Feb 11,	2009	<MLS> Bumping my version to 1.1.2
 //*******************************************************************************
 //#include	"SubPGraphics.h"
 //*******************************************************************************
@@ -51,7 +53,8 @@
 	#include	"HardwareDef.h"
 #endif
 
-#define	kSubP_VersionString	"SubP Ver 1.1.1"
+#define	kSubP_VersionString			"SubP Ver 1.1.2"
+#define	kSubP_ReleaseDateString		"Feb 11, 2009"
 
 //*******************************************************************************
 //*	TYPES
@@ -157,6 +160,9 @@ void	arc(int xCenter, int yCenter, int xDiameter, int yDiameter, float startAngl
 
 
 #ifdef _SUBP_OPTION_KEYBOARD_
+
+char	GetQWERTYkeyboardInput(void);
+
 enum {	kButtonMode_dontDraw	=	0,
 		kButtonMode_drawHex,
 		kButtonMode_drawName

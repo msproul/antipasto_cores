@@ -10,7 +10,7 @@
 
 #include "HardwareSerial.h"
 #ifndef SUBPGRAPHICS_H
-	#include "SubPGraphics.h" //enable by default
+//	#include "SubPGraphics.h"
 #endif
 
 #ifdef __cplusplus

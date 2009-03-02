@@ -6,6 +6,8 @@
 //*	Dec  ?,	2008	<MATT> Added support for port 1 on the Slide
 //*	Jan 28,	2009	<MLS> Working on merging stealth and slide code
 //*	Jan 30,	2009	<MLS> Added support for ports 2 and 3 on the Slide
+//*	Feb 11,	2009	<MLS> Added usart_isavailable2 & usart_isavailable3
+//*	Feb 17,	2009	<MLS> Fixed bug in usart_getByte3
 //*******************************************************************************
 
 #include	<avr/io.h>
@@ -222,6 +224,23 @@ unsigned long UB;
 }
 
 
+
+//*******************************************************************************
+unsigned char	usart_isavailable2(void)
+{
+unsigned char	isAvalable;
+
+	if (UCSR2A & (1<<RXC2))
+	{
+		isAvalable	=	true;
+	}
+	else
+	{
+		isAvalable	=	false;
+	}
+	return(isAvalable);
+}
+
 //*******************************************************************************
 unsigned char	usart_getByte2(void)
 {
@@ -236,6 +255,9 @@ unsigned char	theByte;
 	return(theByte)	;
 	
 }
+
+
+
 //#define	_DEBUG_PORT2_VIA_PORT3_
 //*******************************************************************************
 void usart_putc2(unsigned char c)
@@ -299,6 +321,40 @@ unsigned long UB;
 	sei(); //enable interrupts
 
 }
+
+
+
+//*******************************************************************************
+unsigned char	usart_isavailable3(void)
+{
+unsigned char	isAvalable;
+
+	if (UCSR3A & (1<<RXC3))
+	{
+		isAvalable	=	true;
+	}
+	else
+	{
+		isAvalable	=	false;
+	}
+	return(isAvalable);
+}
+
+//*******************************************************************************
+unsigned char	usart_getByte3(void)
+{
+unsigned char	theByte;
+
+	while ( !(UCSR3A & (1<<RXC3)) )
+	{
+		;	//*	do nothing
+	}
+		
+	theByte	=	UDR3;
+	return(theByte)	;
+	
+}
+
 
 //*******************************************************************************
 void usart_putc3(unsigned char c)

@@ -63,6 +63,7 @@ typedef struct  {
 	void	SetRect(RECT *theRect, short left, short top, short right, short bottom);
 	void	InsetRect(RECT *theRect, short insetX, short insetY);
 	void	OffsetRect(RECT *theRect, short deltaX, short deltaY);
+	void	SetRGBcolor(COLOR *theColor, unsigned char redValue,  unsigned char greenValue,  unsigned char blueValue);
 	void	RGBForeColor(COLOR *theColor);
 	void	RGBBackColor(COLOR *theColor);
 	void	PlotIcon(short xLoc, short yLoc, unsigned char *iconDef);

@@ -65,6 +65,7 @@
 #endif
 
 #ifdef _ENABLE_HERSHEY_FONTS_
+	//*	see source file for argument descriptions (some of the "char" args are 8 bit ints)
 	void	HersheyDrawCString(char fontNumber, short xloc, short yloc, char *theCstr, char fontSize, short fontAngle, char penSize);
 	void	GetHersheyFontName(char fontNumber, char *fontName);
 #endif
